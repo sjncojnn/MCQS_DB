@@ -177,6 +177,7 @@ namespace Mcq.Controllers
 
                 // Thông báo thành công và chuyển hướng tới trang kết quả thi
                 TempData["Message"] = "Nộp bài thành công!";
+                HttpContext.Session.Remove("StartTime");
                 return RedirectToAction("ExamResult", new { examId });
             }
             catch (Exception ex)
@@ -245,6 +246,48 @@ namespace Mcq.Controllers
                 .Select(a => a.Idattempt)
                 .FirstOrDefault();
         }
+
+        public IActionResult ExamResult(Guid examId)
+        {
+            Guid studentId = Guid.Parse(HttpContext.Session.GetString("UserId"));
+
+            // Lấy dữ liệu bài thi và kết quả làm bài
+            var examResult = (from attempt in _context.ExamAttempts
+                            join exam in _context.Exams on attempt.Idexam equals exam.Idexam
+                            where attempt.Idstudent == studentId && attempt.Idexam == examId
+                            select new
+                            {
+                                ExamName = exam.Name,
+                                ExamScore = attempt.ExamScore,
+                                TotalQuestions = exam.number_of_question,
+                                CorrectAnswers = attempt.NumsCorrectAns,
+                                StartTime = attempt.StartTime,
+                                CompletionTime = attempt.CompletionTime
+                            }).FirstOrDefault();
+
+            if (examResult == null)
+            {
+                return NotFound("Exam result not found.");
+            }
+
+            // Tính thời gian làm bài
+            var duration = (examResult.CompletionTime - examResult.StartTime).TotalMinutes;
+
+            // Chuẩn bị dữ liệu để hiển thị
+            var model = new ExamResultViewModel
+            {
+                ExamName = examResult.ExamName,
+                ExamScore = (double)examResult.ExamScore,
+                TotalQuestions = examResult.TotalQuestions,
+                CorrectAnswers = examResult.CorrectAnswers,
+                StartTime = examResult.StartTime,
+                CompletionTime = examResult.CompletionTime,
+                Duration = duration
+            };
+
+            return View(model);
+        }
+
 
         public IActionResult Performance()
         {

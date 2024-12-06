@@ -15,6 +15,18 @@ public class HomeController : BaseController
 
     public IActionResult Index()
     {
+        
+            var roleId = HttpContext.Session.GetString("RoleId");  
+
+            if (roleId == "3")
+            {
+                return RedirectToAction("Dashboard", "Student");
+            }
+            else if (roleId == "2")
+            {
+                return RedirectToAction("Dashboard", "Teacher");
+            }
+
             return View();
     }
 

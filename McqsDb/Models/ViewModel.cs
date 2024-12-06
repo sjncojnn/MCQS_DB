@@ -91,6 +91,17 @@ public class OptionViewModel
     public string Content { get; set; }
 }
 
+public class ExamResultViewModel
+    {
+        public string ExamName { get; set; }
+        public double ExamScore { get; set; }
+        public int TotalQuestions { get; set; }
+        public int CorrectAnswers { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime CompletionTime { get; set; }
+        public double Duration { get; set; } // Thời gian làm bài (phút)
+    }
+
 public class PerformanceViewModel
 {
     public List<ExamPerformance> PerformanceData { get; set; }
