@@ -1,0 +1,95 @@
+@using Mcq.Models
+@model TeacherAnalyticsViewModel
+
+<div class="container">
+    <h2>Teacher Analytics</h2>
+
+    @foreach (var exam in Model.Exams)
+    {
+        <div class="exam-section">
+            <div class="alert alert-info">
+                <strong>Exam: </strong> @exam.ExamName
+            </div>
+
+            <!-- Bảng thống kê cho từng bài thi -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Metric</th>
+                        <th scope="col">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Total Students</strong></td>
+                        <td>@exam.TotalStudents</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Average Score</strong></td>
+                        <td>@exam.AverageScore</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Correct Answers</strong></td>
+                        <td>@exam.CorrectAnswers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Incorrect Answers</strong></td>
+                        <td>@exam.IncorrectAnswers</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Thống kê theo mức độ khó của câu hỏi -->
+            <h5>Question Difficulty Breakdown</h5>
+            @if (exam.QuestionDifficultyStats != null && exam.QuestionDifficultyStats.Any())
+            {
+                <ul>
+                    @foreach (var difficulty in exam.QuestionDifficultyStats)
+                    {
+                        <li>@difficulty.Key: @difficulty.Value correct answers</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No question difficulty data available.</p>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .exam-section {
+        margin-top: 30px;
+    }
+
+    .table {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .table th, .table td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    .alert {
+        margin-top: 20px;
+    }
+
+    .alert-info {
+        background-color: #cce5ff;
+        border-color: #b8daff;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    ul li {
+        background-color: #f8f9fa;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+    }
+</style>

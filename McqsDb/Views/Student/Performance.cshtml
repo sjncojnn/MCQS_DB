@@ -1,0 +1,36 @@
+@using Mcq.Models
+@model PerformanceViewModel
+<div class="performance-summary">
+    <h2>Student Performance</h2>
+    <div>
+        <p><strong>Total Exams:</strong> @Model.TotalExams</p>
+        <p><strong>Average Score:</strong> @Model.AverageScore.ToString("F2")</p>
+        <p><strong>Accuracy Rate:</strong> @Model.AccuracyRate.ToString("F2")%</p>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Exam</th>
+            <th>Score</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Accuracy</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var data in Model.PerformanceData)
+        {
+            <tr>
+                <td>@data.ExamName</td>
+                <td>@data.Score</td>
+                <td>@data.StartTime.ToString("g")</td>
+                <td>@data.EndTime.ToString("g")</td>
+                <td>@data.AccuracyRate.ToString("F2")%</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

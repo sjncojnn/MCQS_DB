@@ -1,0 +1,22 @@
+@model Mcq.Models.CreateTopicViewModel
+
+<h2>Create Topic</h2>
+
+<form asp-action="CreateTopic" asp-controller="Teacher" method="post">
+    <div class="form-group">
+        <label for="Name">Topic Name</label>
+        <input type="text" id="Name" name="Name" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="IdProperty">Property</label>
+        <select id="IdProperty" name="IdProperty" class="form-control" required>
+            @foreach (var property in ViewBag.Properties)
+            {
+                <option value="@property.Idproperty">@property.Subject - Grade @property.Grade</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Topic</button>
+</form>

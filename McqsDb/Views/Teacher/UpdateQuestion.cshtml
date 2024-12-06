@@ -1,0 +1,59 @@
+@model Mcq.Models.UpdateQuestionViewModel
+
+<h2>Update Question</h2>
+<form asp-action="UpdateQuestion" method="post">
+    <input type="hidden" asp-for="Idquestion" />
+    <input type="hidden" asp-for="Idexam" />
+
+    <div>
+        <label>Content</label>
+        <textarea asp-for="Content" required></textarea>
+    </div>
+
+    <div>
+        <label>Difficulty Level</label>
+        <input type="text" asp-for="DifficultyLevel" required />
+    </div>
+
+    <h3>Options</h3>
+    <div id="options-container">
+        @for (int i = 0; i < Model.Options.Count; i++)
+        {
+            <div class="option">
+                <label>Option Content</label>
+                <input type="text" name="Options[@i].OptionContent" value="@Model.Options[i].OptionContent" required />
+
+                <label>Is Correct</label>
+                <input type="checkbox" name="Options[@i].IsCorrect" value="true" @(Model.Options[i].IsCorrect ? "checked" : "") />
+
+                <label>Explanation</label>
+                <textarea name="Options[@i].Explanation" required>@Model.Options[i].Explanation</textarea>
+            </div>
+        }
+    </div>
+
+    <button type="button" id="add-option">Add Option</button>
+    <button type="submit">Update Question</button>
+</form>
+
+<script>
+    let optionIndex = @Model.Options.Count;
+
+    document.getElementById('add-option').addEventListener('click', function () {
+        const container = document.getElementById('options-container');
+        const newOption = `
+            <div class="option">
+                <label>Option Content</label>
+                <input type="text" name="Options[${optionIndex}].OptionContent" required />
+
+                <label>Is Correct</label>
+                <input type="checkbox" name="Options[${optionIndex}].IsCorrect" value="true" />
+
+                <label>Explanation</label>
+                <textarea name="Options[${optionIndex}].Explanation" required></textarea>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', newOption);
+        optionIndex++;
+    });
+</script>

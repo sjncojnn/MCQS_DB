@@ -1,0 +1,95 @@
+@model Mcq.Models.User
+
+<form asp-action="Index" method="post">
+    <div>
+        <label>First Name</label>
+        <input asp-for="FirstName" />
+        <span asp-validation-for="FirstName"></span>
+    </div>
+
+    <div>
+        <label>Last Name</label>
+        <input asp-for="LastName" />
+        <span asp-validation-for="LastName"></span>
+    </div>
+
+    <div>
+        <label>Email</label>
+        <input asp-for="Email" type="email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+
+    <div>
+        <label>Password</label>
+        <input asp-for="Password" type="password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+
+    <div>
+        <label>Phone Number</label>
+        <input asp-for="PhoneNumber" />
+        <span asp-validation-for="PhoneNumber"></span>
+    </div>
+
+    <div>
+        <label>Date of Birth</label>
+        <input asp-for="DateOfBirth" type="date" />
+        <span asp-validation-for="DateOfBirth"></span>
+    </div>
+
+    <div>
+        <label>Role</label>
+        <select id="roleType" name="roleType">
+            <option value="Student">Student</option>
+            <option value="Teacher">Teacher</option>
+        </select>
+    </div>
+
+    <div id="teacherFields" style="display: none;">
+        <h3>Teacher Information</h3>
+        <div>
+            <label>Specialization</label>
+            <input name="teacher.Specialization" />
+        </div>
+        <div>
+            <label>Qualification</label>
+            <input name="teacher.Qualification" />
+        </div>
+        <div>
+            <label>Department</label>
+            <input name="teacher.Department" />
+        </div>
+    </div>
+
+    <!-- Các trường của Student (hiển thị luôn khi chọn Student) -->
+    <div id="studentFields">
+        <h3>Student Information</h3>
+        <div>
+            <label>Grade</label>
+            <input name="student.Grade" type="number" />
+        </div>
+        <div>
+            <label>School Name</label>
+            <input name="student.SchoolName" />
+        </div>
+    </div>
+
+    <button type="submit">Register</button>
+</form>
+
+@section Scripts {
+    <script>
+        document.getElementById('roleType').addEventListener('change', function () {
+            var role = this.value;
+
+            // Hiển thị các trường cho Teacher hoặc Student tùy theo giá trị roleType
+            if (role === 'Teacher') {
+                document.getElementById('teacherFields').style.display = 'block';
+                document.getElementById('studentFields').style.display = 'none';
+            } else if (role === 'Student') {
+                document.getElementById('teacherFields').style.display = 'none';
+                document.getElementById('studentFields').style.display = 'block';
+            }
+        });
+    </script>
+}

@@ -1,0 +1,75 @@
+@model Mcq.Models.ExamDetailViewModel
+
+<h2>Exam Detail</h2>
+
+<p><strong>Exam Name:</strong> @Model.ExamName</p>
+<p><strong>Duration:</strong> @Model.Duration minutes</p>
+<p><strong>Number of Questions:</strong> @Model.NumberOfQuestions</p>
+<p><strong>Created by:</strong> @Model.CreatedBy</p>
+
+<h3>Attempt History</h3>
+@if (Model.AttemptHistories.Any())
+{
+    <ul>
+        @foreach (var attempt in Model.AttemptHistories)
+        {
+            <li>
+                <strong>Start Time:</strong> @attempt.StartTime <br />
+                <strong>Completion Time:</strong> @attempt.CompletionTime <br />
+                <strong>Score:</strong> @attempt.ExamScore <br />
+                <strong>Correct Answers:</strong> @attempt.NumsCorrectAns
+            </li>
+            <h3>Student Answers</h3>
+            @if (attempt.StudentAnswers.Any())
+            {
+                <ul>
+                    @foreach (var answer in attempt.StudentAnswers)
+                    {
+                        <li>
+                            <strong>Content:</strong> @answer.QuestionName <br />
+                            <strong>Selected Answer:</strong> @answer.SelectedAns <br />
+                            <strong>Is Correct:</strong> @(answer.IsCorrect ? "Yes" : "No")
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No answers recorded.</p>
+            }
+        }
+    </ul>
+}
+else
+{
+    <p>No attempts yet.</p>
+}
+
+
+
+<h3>Actions</h3>
+<button onclick="startExam()">Start Exam</button>
+
+<div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0, 0, 0, 0.7); z-index: 999;"></div>
+
+<!-- Khối bắt đầu bài thi -->
+<div id="startExamBlock" style="display:none; position:fixed; top:20%; left:50%; transform:translate(-50%, -50%); background:#fff; padding:20px; border:1px solid #ccc; z-index: 1000;">
+    <p>Are you sure you want to start the exam?</p>
+    <a asp-controller="Student" asp-action="StartExam" asp-route-examId="@Model.Idexam" class="btn btn-primary">Confirm</a>
+
+    <button onclick="hideStartExamBlock()" class="btn btn-primary">No</button>
+</div>
+
+<script>
+    function startExam() {
+        document.getElementById("startExamBlock").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
+    }
+
+
+    function hideStartExamBlock() {
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("startExamBlock").style.display = "none";
+    }
+
+</script>

@@ -1,0 +1,88 @@
+@model Mcq.Models.CreateQuestionViewModel
+@if (ViewBag.Errors != null && ((List<string>)ViewBag.Errors).Count > 0)
+{
+    <div class="error-messages">
+        <ul>
+            @foreach (var error in (List<string>)ViewBag.Errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+<h2>Create Questions</h2>
+<form asp-action="CreateQuestion" method="post">
+    <input type="hidden" asp-for="ExamId" />
+
+    <div id="questions-container">
+        <div class="question">
+            <h3>Question 1</h3>
+            <label>Content</label>
+            <textarea name="Questions[0].Content" required></textarea>
+            
+            <label>Difficulty Level</label>
+            <input type="text" name="Questions[0].DifficultyLevel" required />
+
+            <label>Options</label>
+            <div class="options" data-question-index="0">
+                <div>
+                    <input type="text" name="Questions[0].Options[0].OptionContent" placeholder="Option Content" required />
+                    <input type="checkbox" name="Questions[0].Options[0].IsCorrect" value="true"  />
+                    <textarea name="Questions[0].Options[0].Explanation" placeholder="Explanation" required></textarea>
+                </div>
+            </div>
+            <button type="button" class="add-option" data-question-index="0">Add Option</button>
+        </div>
+    </div>
+
+    <button type="button" id="add-question">Add Question</button>
+    <button type="submit">Create Questions</button>
+</form>
+
+<script>
+    let questionIndex = 1;
+
+    // Logic to add a new question dynamically
+    document.getElementById('add-question').addEventListener('click', function () {
+        const container = document.getElementById('questions-container');
+        const newQuestion = `
+            <div class="question">
+                <h3>Question ${questionIndex + 1}</h3>
+                <label>Content</label>
+                <textarea name="Questions[${questionIndex}].Content" required></textarea>
+                
+                <label>Difficulty Level</label>
+                <input type="text" name="Questions[${questionIndex}].DifficultyLevel" required />
+
+                <label>Options</label>
+                <div class="options" data-question-index="${questionIndex}">
+                    <div>
+                        <input type="text" name="Questions[${questionIndex}].Options[0].OptionContent" placeholder="Option Content" required />
+                        <input type="checkbox" name="Questions[${questionIndex}].Options[0].IsCorrect" value="true" />
+                        <textarea name="Questions[${questionIndex}].Options[0].Explanation" placeholder="Explanation" required></textarea>
+                    </div>
+                </div>
+                <button type="button" class="add-option" data-question-index="${questionIndex}">Add Option</button>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', newQuestion);
+        questionIndex++;
+    });
+
+    // Logic to add new options dynamically within a question
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('add-option')) {
+            const questionIndex = event.target.dataset.questionIndex;
+            const optionsContainer = document.querySelector(`.options[data-question-index="${questionIndex}"]`);
+            const optionIndex = optionsContainer.children.length;
+            const newOption = `
+                <div>
+                    <input type="text" name="Questions[${questionIndex}].Options[${optionIndex}].OptionContent" placeholder="Option Content" required />
+                     <input type="checkbox" name="Questions[${questionIndex}].Options[${optionIndex}].IsCorrect" value="true" />
+                    <textarea name="Questions[${questionIndex}].Options[${optionIndex}].Explanation" placeholder="Explanation" required></textarea>
+                </div>
+            `;
+            optionsContainer.insertAdjacentHTML('beforeend', newOption);
+        }
+    });
+</script>

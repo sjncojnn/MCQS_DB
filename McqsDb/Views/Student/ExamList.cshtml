@@ -1,0 +1,70 @@
+@model IEnumerable<dynamic>
+
+<h2>Exam List</h2>
+
+<div id="examList">
+    @foreach (var grade in Model)
+    {
+        <div class="grade">
+            <button class="toggle" onclick="toggleDropdown('grade-@grade.Grade')">
+                ▶ Grade: @grade.Grade
+            </button>
+            <div id="grade-@grade.Grade" class="hidden">
+                @foreach (var subject in grade.Subjects)
+                {
+                    <div class="subject">
+                        <button class="toggle" onclick="toggleDropdown('subject-@subject.Subject')">
+                            ▶ Subject: @subject.Subject
+                        </button>
+                        <div id="subject-@subject.Subject" class="hidden">
+                            @foreach (var topic in subject.Topics)
+                            {
+                                <div class="topic">
+                                    <button class="toggle" onclick="toggleDropdown('topic-@topic.Topic')">
+                                        ▶ Topic: @topic.Topic
+                                    </button>
+                                    <div id="topic-@topic.Topic" class="hidden">
+                                        <ul>
+                                            @foreach (var exam in topic.Exams)
+                                            {
+                                                <li>
+                                                    <strong>Exam Name:</strong> @exam.ExamName <br />
+                                                    <strong>Duration:</strong> @exam.Duration minutes<br />
+                                                    <strong>Questions:</strong> @exam.NumberOfQuestions<br />
+                                                    <strong>Created by:</strong> @exam.CreatedBy <br/>
+                                                    <a asp-controller="Student" asp-action="Detail" asp-route-examId="@exam.ExamId" class="btn btn-primary">Details</a>
+
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function toggleDropdown(id) {
+        const element = document.getElementById(id);
+        if (element.classList.contains('hidden')) {
+            element.classList.remove('hidden');
+        } else {
+            element.classList.add('hidden');
+        }
+    }
+</script>
+
+<style>
+    .hidden {
+        display: none;
+    }
+
+    .grade, .subject, .topic {
+        margin-left: 20px;
+    }
+</style>

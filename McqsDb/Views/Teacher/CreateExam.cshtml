@@ -1,0 +1,38 @@
+@model Mcq.Models.CreateExamViewModel
+@if (ViewBag.Errors != null && ((List<string>)ViewBag.Errors).Count > 0)
+{
+    <div class="error-messages">
+        <ul>
+            @foreach (var error in (List<string>)ViewBag.Errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+<h2>Create Exam</h2>
+<form asp-action="CreateExam" method="post">
+    <div>
+        <label>Exam Name</label>
+        <input type="text" asp-for="ExamName" required />
+    </div>
+    <div>
+        <label>Duration (minutes)</label>
+        <input type="number" asp-for="Duration" required />
+    </div>
+    <div>
+        <input type="hidden" asp-for="number_of_question" value = 0 />
+    </div>
+    <div>
+        <label>Topic</label>
+        <select asp-for="IdTopic">
+            @foreach (var topic in ViewBag.Topics)
+            {
+                <option value="@topic.Idtopic">@topic.Name - @topic.Property.Subject - @topic.Property.Grade</option>
+            }
+        </select>
+    </div>
+    <button type="submit">Create</button>
+    <a asp-action="CreateTopic" asp-controller="Teacher" class="btn btn-secondary">Create Topic</a>
+
+</form>

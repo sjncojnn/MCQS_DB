@@ -1,0 +1,42 @@
+@using Mcq.Models
+@model ExamSessionViewModel
+
+<h2>@Model.ExamName</h2>
+<p>Thời gian làm bài: <span id="countdown">@Model.Duration:00</span> phút</p>
+
+<form id="examForm" method="post" asp-action="SubmitExam" asp-controller="Student">
+    <input type="hidden" name="examId" value="@Model.ExamId" />
+    @foreach (var question in Model.Questions)
+    {
+        <div>
+            <p><strong>@question.Content</strong></p>
+            @foreach (var option in question.Options)
+            {
+                <div>
+                    <input type="checkbox" name="answers[@question.QuestionId]" value="@option.Content" />
+                    <label>@option.Content</label>
+                </div>
+            }
+        </div>
+    }
+    <hr />
+    }
+    <button type="submit">Nộp bài</button>
+</form>
+
+<script>
+    let duration = @Model.Duration * 60;
+    const countdownElem = document.getElementById("countdown");
+
+    const countdown = setInterval(() => {
+        if (duration <= 0) {
+            clearInterval(countdown);
+            document.getElementById("examForm").submit(); // Tự động submit nếu hết giờ
+        } else {
+            duration--;
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            countdownElem.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        }
+    }, 1000);
+</script>

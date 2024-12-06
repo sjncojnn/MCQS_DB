@@ -1,0 +1,69 @@
+@model List<Mcq.Models.Exam>
+
+<h2>Your Exams</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Number of Questions</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var exam in Model)
+        {
+            <tr>
+                <td>
+
+                    <a asp-action="ExamDetails" asp-route-id="@exam.Idexam">@exam.Name</a>
+
+                </td>
+                <td>@exam.number_of_question</td>
+                <td>
+                    <form asp-action="DeleteExam" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@exam.Idexam" />
+                        <button type="submit" onclick="return confirm('Are you sure you want to delete this exam?')">Delete</button>
+                    </form>
+                    <button type="button" class="edit-exam" data-id="@exam.Idexam" data-name="@exam.Name" data-duration="@exam.Duration">
+                        Edit
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Edit Exam Modal -->
+<div id="edit-exam-modal" style="display:none; position:fixed; top:20%; left:50%; transform:translate(-50%, -50%); background:#fff; padding:20px; border:1px solid #ccc;">
+    <h3>Edit Exam</h3>
+    <form asp-action="EditExam" method="post">
+        <input type="hidden" name="Idexam" id="edit-exam-id" />
+        <div>
+            <label for="edit-exam-name">Name</label>
+            <input type="text" name="Name" id="edit-exam-name" required />
+        </div>
+        <div>
+            <label for="edit-exam-duration">Duration</label>
+            <input type="number" name="Duration" id="edit-exam-duration" required />
+        </div>
+        <button type="submit">Save</button>
+        <button type="button" id="cancel-edit">Cancel</button>
+    </form>
+</div>
+
+<script>
+    document.querySelectorAll('.edit-exam').forEach(button => {
+        button.addEventListener('click', function () {
+            const modal = document.getElementById('edit-exam-modal');
+            document.getElementById('edit-exam-id').value = this.dataset.id;
+            document.getElementById('edit-exam-name').value = this.dataset.name;
+            document.getElementById('edit-exam-duration').value = this.dataset.duration;
+            modal.style.display = 'block';
+        });
+    });
+
+    document.getElementById('cancel-edit').addEventListener('click', function () {
+        document.getElementById('edit-exam-modal').style.display = 'none';
+    });
+</script>
