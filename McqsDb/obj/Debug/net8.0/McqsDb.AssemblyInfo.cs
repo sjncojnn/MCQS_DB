@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("McqsDb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fd94e59865210ee8d5156d0fde382475d3c3038b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+56e76b6bd9600fe5c67ddb56ddfc3d9e8b2f0a38")]
 [assembly: System.Reflection.AssemblyProductAttribute("McqsDb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("McqsDb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

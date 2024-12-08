@@ -1,95 +1,207 @@
 @model Mcq.Models.User
 
-<form asp-action="Index" method="post">
-    <div>
-        <label>First Name</label>
-        <input asp-for="FirstName" />
-        <span asp-validation-for="FirstName"></span>
-    </div>
+<!-- Form Container -->
+<div class="form-container">
+    <h2 class="form-title">User Registration</h2>
+    <form asp-action="Index" method="post" class="registration-form">
+        <!-- User Information -->
+        <div class="form-section">
+            <h3 class="section-title">Personal Information</h3>
+            <div class="form-group">
+                <label for="FirstName">First Name</label>
+                <input asp-for="FirstName" class="form-input" required />
+                <span asp-validation-for="FirstName" class="validation-message"></span>
+            </div>
 
-    <div>
-        <label>Last Name</label>
-        <input asp-for="LastName" />
-        <span asp-validation-for="LastName"></span>
-    </div>
+            <div class="form-group">
+                <label for="LastName">Last Name</label>
+                <input asp-for="LastName" class="form-input" required />
+                <span asp-validation-for="LastName" class="validation-message"></span>
+            </div>
 
-    <div>
-        <label>Email</label>
-        <input asp-for="Email" type="email" />
-        <span asp-validation-for="Email"></span>
-    </div>
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <input asp-for="Email" type="email" class="form-input" required />
+                <span asp-validation-for="Email" class="validation-message"></span>
+            </div>
 
-    <div>
-        <label>Password</label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password"></span>
-    </div>
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <input asp-for="Password" type="password" class="form-input" required />
+                <span asp-validation-for="Password" class="validation-message"></span>
+            </div>
 
-    <div>
-        <label>Phone Number</label>
-        <input asp-for="PhoneNumber" />
-        <span asp-validation-for="PhoneNumber"></span>
-    </div>
+            <div class="form-group">
+                <label for="PhoneNumber">Phone Number</label>
+                <input asp-for="PhoneNumber" class="form-input" required />
+                <span asp-validation-for="PhoneNumber" class="validation-message"></span>
+            </div>
 
-    <div>
-        <label>Date of Birth</label>
-        <input asp-for="DateOfBirth" type="date" />
-        <span asp-validation-for="DateOfBirth"></span>
-    </div>
-
-    <div>
-        <label>Role</label>
-        <select id="roleType" name="roleType">
-            <option value="Student">Student</option>
-            <option value="Teacher">Teacher</option>
-        </select>
-    </div>
-
-    <div id="teacherFields" style="display: none;">
-        <h3>Teacher Information</h3>
-        <div>
-            <label>Specialization</label>
-            <input name="teacher.Specialization" />
+            <div class="form-group">
+                <label for="DateOfBirth">Date of Birth</label>
+                <input asp-for="DateOfBirth" type="date" class="form-input" required />
+                <span asp-validation-for="DateOfBirth" class="validation-message"></span>
+            </div>
         </div>
-        <div>
-            <label>Qualification</label>
-            <input name="teacher.Qualification" />
-        </div>
-        <div>
-            <label>Department</label>
-            <input name="teacher.Department" />
-        </div>
-    </div>
 
-    <!-- Các trường của Student (hiển thị luôn khi chọn Student) -->
-    <div id="studentFields">
-        <h3>Student Information</h3>
-        <div>
-            <label>Grade</label>
-            <input name="student.Grade" type="number" />
+        <!-- Role Selection -->
+        <div class="form-group role-selection">
+            <label for="roleType">Role</label>
+            <select id="roleType" name="roleType" class="form-select">
+                <option value="Student" active>Student</option>
+                <option value="Teacher">Teacher</option>
+            </select>
         </div>
-        <div>
-            <label>School Name</label>
-            <input name="student.SchoolName" />
-        </div>
-    </div>
 
-    <button type="submit">Register</button>
-</form>
+        <!-- Teacher Fields -->
+        <div id="teacherFields" class="form-section" style="display: none;">
+            <h3 class="section-title">Teacher Information</h3>
+            <div class="form-group">
+                <label for="Specialization">Specialization</label>
+                <input name="teacher.Specialization" class="form-input" data-required-for="Teacher" />
+            </div>
+            <div class="form-group">
+                <label for="Qualification">Qualification</label>
+                <input name="teacher.Qualification" class="form-input" data-required-for="Teacher" />
+            </div>
+            <div class="form-group">
+                <label for="Department">Department</label>
+                <input name="teacher.Department" class="form-input" data-required-for="Teacher" />
+            </div>
+        </div>
+
+        <!-- Student Fields -->
+        <div id="studentFields" class="form-section">
+            <h3 class="section-title">Student Information</h3>
+            <div class="form-group">
+                <label for="Grade">Grade</label>
+                <input name="student.Grade" type="number" class="form-input" data-required-for="Student" />
+            </div>
+            <div class="form-group">
+                <label for="SchoolName">School Name</label>
+                <input name="student.SchoolName" class="form-input" data-required-for="Student" />
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="form-submit-button">Register</button>
+    </form>
+</div>
 
 @section Scripts {
     <script>
-        document.getElementById('roleType').addEventListener('change', function () {
-            var role = this.value;
+        // Cập nhật trạng thái required dựa trên role
+        function updateRequiredFields(role) {
+            const inputs = document.querySelectorAll('input[data-required-for]');
+            inputs.forEach(input => {
+                if (input.dataset.requiredFor === role) {
+                    input.setAttribute('required', 'required');
+                } else {
+                    input.removeAttribute('required');
+                }
+            });
+        }
 
-            // Hiển thị các trường cho Teacher hoặc Student tùy theo giá trị roleType
+        // Thay đổi hiển thị và cập nhật required khi roleType thay đổi
+        document.getElementById('roleType').addEventListener('change', function () {
+            const role = this.value;
+            const teacherFields = document.getElementById('teacherFields');
+            const studentFields = document.getElementById('studentFields');
+
             if (role === 'Teacher') {
-                document.getElementById('teacherFields').style.display = 'block';
-                document.getElementById('studentFields').style.display = 'none';
-            } else if (role === 'Student') {
-                document.getElementById('teacherFields').style.display = 'none';
-                document.getElementById('studentFields').style.display = 'block';
+                teacherFields.style.display = 'block';
+                studentFields.style.display = 'none';
+            } else {
+                teacherFields.style.display = 'none';
+                studentFields.style.display = 'block';
             }
+
+            updateRequiredFields(role);
+        });
+
+        // Khởi tạo trang
+        document.addEventListener('DOMContentLoaded', function () {
+            const role = document.getElementById('roleType').value;
+            updateRequiredFields(role);
         });
     </script>
 }
+
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-title {
+        text-align: center;
+        color: #333;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .form-section {
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        color: #555;
+        font-size: 1.4em;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .form-input,
+    .form-select {
+        width: 100%;
+        padding: 8px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .form-submit-button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-size: 1em;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+    }
+
+    .form-submit-button:hover {
+        background-color: #0056b3;
+    }
+
+    .validation-message {
+        color: #e74c3c;
+        font-size: 0.85em;
+    }
+</style>

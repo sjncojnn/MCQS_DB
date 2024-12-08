@@ -1,4 +1,5 @@
 @model Mcq.Models.CreateQuestionViewModel
+
 @if (ViewBag.Errors != null && ((List<string>)ViewBag.Errors).Count > 0)
 {
     <div class="error-messages">
@@ -10,7 +11,9 @@
         </ul>
     </div>
 }
-<h2>Create Questions</h2>
+
+<h2>Finish</h2>
+
 <form asp-action="CreateQuestion" method="post">
     <input type="hidden" asp-for="ExamId" />
 
@@ -21,13 +24,18 @@
             <textarea name="Questions[0].Content" required></textarea>
             
             <label>Difficulty Level</label>
-            <input type="text" name="Questions[0].DifficultyLevel" required />
+            <select name="Questions[0].DifficultyLevel" required>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
 
             <label>Options</label>
             <div class="options" data-question-index="0">
-                <div>
+                <div class="option">
                     <input type="text" name="Questions[0].Options[0].OptionContent" placeholder="Option Content" required />
-                    <input type="checkbox" name="Questions[0].Options[0].IsCorrect" value="true"  />
+                    <input type="checkbox" name="Questions[0].Options[0].IsCorrect" value="true" />
+                    <label>Explain:</label>
                     <textarea name="Questions[0].Options[0].Explanation" placeholder="Explanation" required></textarea>
                 </div>
             </div>
@@ -36,7 +44,7 @@
     </div>
 
     <button type="button" id="add-question">Add Question</button>
-    <button type="submit">Create Questions</button>
+    <button type="submit">Finish</button>
 </form>
 
 <script>
@@ -52,13 +60,18 @@
                 <textarea name="Questions[${questionIndex}].Content" required></textarea>
                 
                 <label>Difficulty Level</label>
-                <input type="text" name="Questions[${questionIndex}].DifficultyLevel" required />
+                <select name="Questions[${questionIndex}].DifficultyLevel" required>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
 
                 <label>Options</label>
                 <div class="options" data-question-index="${questionIndex}">
-                    <div>
+                    <div class="option">
                         <input type="text" name="Questions[${questionIndex}].Options[0].OptionContent" placeholder="Option Content" required />
                         <input type="checkbox" name="Questions[${questionIndex}].Options[0].IsCorrect" value="true" />
+                        <label>Explain:</label>
                         <textarea name="Questions[${questionIndex}].Options[0].Explanation" placeholder="Explanation" required></textarea>
                     </div>
                 </div>
@@ -76,9 +89,10 @@
             const optionsContainer = document.querySelector(`.options[data-question-index="${questionIndex}"]`);
             const optionIndex = optionsContainer.children.length;
             const newOption = `
-                <div>
+                <div class="option">
                     <input type="text" name="Questions[${questionIndex}].Options[${optionIndex}].OptionContent" placeholder="Option Content" required />
-                     <input type="checkbox" name="Questions[${questionIndex}].Options[${optionIndex}].IsCorrect" value="true" />
+                    <input type="checkbox" name="Questions[${questionIndex}].Options[${optionIndex}].IsCorrect" value="true" />
+                    <label>Explain:</label>
                     <textarea name="Questions[${questionIndex}].Options[${optionIndex}].Explanation" placeholder="Explanation" required></textarea>
                 </div>
             `;
@@ -86,3 +100,58 @@
         }
     });
 </script>
+
+<style>
+    /* CSS để tách biệt các phần tử trong form */
+    .question {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+
+    .question h3 {
+        margin-top: 0;
+    }
+
+    .error-messages {
+        background-color: #ffdddd;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    .error-messages ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .error-messages li {
+        color: #d8000c;
+    }
+
+    .options {
+        margin-top: 10px;
+    }
+
+    .option {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .option input[type="text"], .option textarea {
+        margin-right: 10px;
+    }
+
+    .option label {
+        margin-right: 10px;
+    }
+
+    .add-option {
+        margin-top: 10px;
+    }
+
+    #add-question {
+        margin-top: 20px;
+    }
+</style>

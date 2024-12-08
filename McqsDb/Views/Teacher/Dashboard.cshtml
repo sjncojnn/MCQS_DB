@@ -2,11 +2,20 @@
     ViewData["Title"] = "Teacher Dashboard";
 }
 
-<h2>Welcome to Teacher Dashboard</h2>
+@if (TempData["AlertMessage"] != null)
+{
+    <script>
+        alert('@TempData["AlertMessage"]');
+    </script>
+}
 
-<ul>
-    <li><a asp-controller="Teacher" asp-action="CreateExam" class="btn btn-secondary">Create Exam</a></li>
-    <li><a asp-action="CreateTopic" asp-controller="Teacher" class="btn btn-secondary">Create Topic</a></li>
-    <li><a asp-action="ExamList" asp-controller="Teacher" class="btn btn-secondary">Exam list</a></li>
-    <li><a asp-action="Analytics" asp-controller="Teacher" class="btn btn-secondary">Analytics</a></li>
-</ul>
+<div class="container text-center">
+    <h2>Welcome to Teacher Dashboard</h2>
+
+    <div class="dashboard-links">
+        <a asp-controller="Teacher" asp-action="CreateExam" class="btn btn-secondary">Create Exam</a>
+        <a asp-action="CreateTopic" asp-controller="Teacher" class="btn btn-secondary">Create Topic</a>
+        <a asp-action="ExamList" asp-controller="Teacher" class="btn btn-secondary">Exam list</a>
+        <a asp-action="Analytics" asp-controller="Teacher" class="btn btn-secondary">Analytics</a>
+    </div>
+</div>

@@ -28,9 +28,12 @@ namespace Mcq.Controllers
         // GET: Create Exam Form
         public IActionResult CreateExam()
         {
-            var topics = _context.Topics.Include(t => t.Property).ToList();
+            var topics = _context.Topics.Include(t => t.Property)
+            .OrderBy(t => t.Property.Grade)
+            .ToList(); 
             ViewBag.Topics = topics;
-            return View("CreateExam");
+    
+    return View("CreateExam");
         }
 
         // POST: Create Exam
@@ -157,6 +160,9 @@ namespace Mcq.Controllers
             var exams = _context.Exams
                 .Where(e => e.Idteacher == teacherId)
                 .Include(e => e.Questions)
+                .Include(b => b.Topic)
+                    .ThenInclude(c => c.Property)
+                .OrderBy(t => t.Topic.Property.Grade)
                 .ToList();
 
             return View(exams);

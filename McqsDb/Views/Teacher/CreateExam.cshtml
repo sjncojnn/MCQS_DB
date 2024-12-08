@@ -28,7 +28,7 @@
         <select asp-for="IdTopic">
             @foreach (var topic in ViewBag.Topics)
             {
-                <option value="@topic.Idtopic">@topic.Name - @topic.Property.Subject - @topic.Property.Grade</option>
+                <option value="@topic.Idtopic">Grade @topic.Property.Grade - @topic.Property.Subject - @topic.Name </option>
             }
         </select>
     </div>

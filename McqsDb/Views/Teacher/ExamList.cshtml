@@ -7,6 +7,8 @@
         <tr>
             <th>Name</th>
             <th>Number of Questions</th>
+            <th>Grade</th>
+            <th>Topic</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -15,20 +17,21 @@
         {
             <tr>
                 <td>
-
                     <a asp-action="ExamDetails" asp-route-id="@exam.Idexam">@exam.Name</a>
-
                 </td>
                 <td>@exam.number_of_question</td>
+                <td>@exam.Topic.Property.Grade</td>
+                <td>@exam.Topic.Property.Subject</td>
                 <td>
-                    <form asp-action="DeleteExam" method="post" style="display:inline">
+                    <form asp-action="DeleteExam" method="post" style="display:inline; border: none; padding: 0; background-color: transparent;">
                         <input type="hidden" name="id" value="@exam.Idexam" />
-                        <button type="submit" onclick="return confirm('Are you sure you want to delete this exam?')">Delete</button>
+                        <button type="submit" class="text-button" onclick="return confirm('Are you sure you want to delete this exam?')">Delete</button>
                     </form>
-                    <button type="button" class="edit-exam" data-id="@exam.Idexam" data-name="@exam.Name" data-duration="@exam.Duration">
+                    <button type="button" class="text-button edit-exam" data-id="@exam.Idexam" data-name="@exam.Name" data-duration="@exam.Duration">
                         Edit
                     </button>
                 </td>
+
             </tr>
         }
     </tbody>
@@ -67,3 +70,33 @@
         document.getElementById('edit-exam-modal').style.display = 'none';
     });
 </script>
+<style>
+.text-button {
+    background: none;
+    border: none;
+    color: blue;
+    cursor: pointer;
+    font-size: 12px; /* Làm nhỏ nút */
+    padding: 2px 5px; /* Giảm padding */
+    text-decoration: underline;
+    display: inline; /* Giữ các nút trên cùng một dòng */
+}
+
+.text-button:hover {
+    color: darkblue;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px; /* Tạo khoảng cách giữa các nút */
+}
+form {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+</style>

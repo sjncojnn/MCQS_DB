@@ -1,42 +1,173 @@
 @using Mcq.Models
 @model ExamSessionViewModel
 
-<h2>@Model.ExamName</h2>
-<p>Thời gian làm bài: <span id="countdown">@Model.Duration:00</span> phút</p>
+<div class="container">
+    <h2 class="text-center">@Model.ExamName</h2>
+    <p class="text-center">Thời gian làm bài: <span id="countdown">@Model.Duration:00</span></p>
 
-<form id="examForm" method="post" asp-action="SubmitExam" asp-controller="Student">
-    <input type="hidden" name="examId" value="@Model.ExamId" />
-    @foreach (var question in Model.Questions)
-    {
-        <div>
-            <p><strong>@question.Content</strong></p>
-            @foreach (var option in question.Options)
-            {
-                <div>
-                    <input type="checkbox" name="answers[@question.QuestionId]" value="@option.Content" />
-                    <label>@option.Content</label>
+    <form id="examForm" method="post" asp-action="SubmitExam" asp-controller="Student">
+        <input type="hidden" name="examId" value="@Model.ExamId" />
+        
+        @foreach (var (question, index) in Model.Questions.Select((value, i) => (value, i)))
+        {
+            <div class="question-block" id="question-@index">
+                <p><strong>Câu hỏi @(index+1): @question.Content</strong></p>
+                @foreach (var option in question.Options)
+                {
+                    <div class="form-check">
+                        <input type="checkbox" name="answers[@question.QuestionId]" value="@option.Content" id="option-@option.Content-@index" class="form-check-input" />
+                        <label for="option-@option.Content-@index" class="form-check-label">@option.Content</label>
+                    </div>
+                }
+
+                <div class="flag-container">
+                    <span class="flag"></span>
                 </div>
-            }
-        </div>
-    }
-    <hr />
-    }
-    <button type="submit">Nộp bài</button>
-</form>
-
-<script>
-    let duration = @Model.Duration * 60;
-    const countdownElem = document.getElementById("countdown");
-
-    const countdown = setInterval(() => {
-        if (duration <= 0) {
-            clearInterval(countdown);
-            document.getElementById("examForm").submit(); // Tự động submit nếu hết giờ
-        } else {
-            duration--;
-            const minutes = Math.floor(duration / 60);
-            const seconds = duration % 60;
-            countdownElem.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+            </div>
         }
-    }, 1000);
-</script>
+
+        <hr />
+        <button type="submit" id="submitExamButton" class="btn btn-primary" disabled="disabled">Nộp bài</button>
+    </form>
+
+    <script>
+        let duration = @Model.Duration * 60; // Thời gian làm bài (giây)
+        const countdownElem = document.getElementById("countdown");
+        const submitButton = document.getElementById("submitExamButton");
+        let allQuestionsAnswered = false;
+
+        // Đếm ngược thời gian
+        const countdown = setInterval(() => {
+            if (duration <= 0) {
+                clearInterval(countdown);
+                alert("Hết thời gian! Bài thi sẽ được nộp.");
+                document.getElementById("examForm").submit(); // Tự động submit nếu hết giờ
+            } else {
+                duration--;
+                const minutes = Math.floor(duration / 60);
+                const seconds = duration % 60;
+                countdownElem.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+            }
+        }, 1000);
+
+        // Kiểm tra trạng thái câu trả lời trước khi submit
+        function checkAllQuestionsAnswered() {
+            const questionBlocks = document.querySelectorAll('.question-block');
+            allQuestionsAnswered = Array.from(questionBlocks).every(question => {
+                const checkboxes = question.querySelectorAll('input[type="checkbox"]');
+                return Array.from(checkboxes).some(checkbox => checkbox.checked);
+            });
+            submitButton.disabled = !allQuestionsAnswered;
+        }
+
+        // Đánh dấu câu trả lời khi chọn câu trả lời
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', checkAllQuestionsAnswered);
+        });
+
+        // Xử lý sự kiện trước khi người dùng rời trang
+        window.addEventListener("beforeunload", function (e) {
+            e.preventDefault();
+            e.returnValue = ""; // Chrome sẽ hiển thị thông báo mặc định
+        });
+
+        // Xử lý khi người dùng thoát trang (unload)
+        window.addEventListener("unload", function () {
+            document.getElementById("examForm").submit(); // Submit bài thi khi rời trang
+        });
+
+        // Xóa sự kiện `beforeunload` khi người dùng nhấn "Nộp bài"
+        document.getElementById("submitExamButton").addEventListener("click", function () {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        });
+
+        function handleBeforeUnload(e) {
+            e.preventDefault();
+            e.returnValue = ""; // Dùng chuỗi rỗng để kích hoạt cảnh báo mặc định
+        }
+    </script>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .text-center {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .question-block {
+        margin-bottom: 20px;
+    }
+
+    .form-check {
+        margin-bottom: 10px;
+    }
+
+    .flag-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 5px;
+    }
+
+    .flag {
+        font-size: 20px;
+        color: green;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:disabled {
+        background-color: #6c757d;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+    }
+
+    .overlay-content {
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        padding: 20px;
+        border: 1px solid #ccc;
+        z-index: 1000;
+    }
+</style>

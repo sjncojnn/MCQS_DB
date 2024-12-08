@@ -84,6 +84,7 @@ public class StudentQuestionViewModel
     public Guid QuestionId { get; set; }
     public string Content { get; set; }
     public List<OptionViewModel> Options { get; set; }
+    public bool Flagged { get; set; }
 }
 
 public class OptionViewModel

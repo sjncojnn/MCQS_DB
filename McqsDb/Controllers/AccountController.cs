@@ -59,6 +59,10 @@ namespace Mcq.Controllers
         public IActionResult Logout()
         {
             // Xóa session khi logout
+            if( HttpContext.Session.GetString("StartTime") != null){
+                TempData["AlertMessage"] = "You have an ongoing exam. Please finish it before navigating away!";
+                return RedirectToAction("Dashboard","Student");
+            }
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }

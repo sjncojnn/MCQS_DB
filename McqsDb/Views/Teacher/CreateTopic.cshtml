@@ -13,7 +13,7 @@
         <select id="IdProperty" name="IdProperty" class="form-control" required>
             @foreach (var property in ViewBag.Properties)
             {
-                <option value="@property.Idproperty">@property.Subject - Grade @property.Grade</option>
+                <option value="@property.Idproperty">Grade @property.Grade - @property.Subject  </option>
             }
         </select>
     </div>

@@ -1,6 +1,7 @@
 @model Mcq.Models.UpdateQuestionViewModel
 
 <h2>Update Question</h2>
+
 <form asp-action="UpdateQuestion" method="post">
     <input type="hidden" asp-for="Idquestion" />
     <input type="hidden" asp-for="Idexam" />
@@ -23,7 +24,6 @@
                 <label>Option Content</label>
                 <input type="text" name="Options[@i].OptionContent" value="@Model.Options[i].OptionContent" required />
 
-                <label>Is Correct</label>
                 <input type="checkbox" name="Options[@i].IsCorrect" value="true" @(Model.Options[i].IsCorrect ? "checked" : "") />
 
                 <label>Explanation</label>
@@ -39,6 +39,7 @@
 <script>
     let optionIndex = @Model.Options.Count;
 
+    // Logic to add new options dynamically
     document.getElementById('add-option').addEventListener('click', function () {
         const container = document.getElementById('options-container');
         const newOption = `
@@ -46,7 +47,6 @@
                 <label>Option Content</label>
                 <input type="text" name="Options[${optionIndex}].OptionContent" required />
 
-                <label>Is Correct</label>
                 <input type="checkbox" name="Options[${optionIndex}].IsCorrect" value="true" />
 
                 <label>Explanation</label>
@@ -57,3 +57,58 @@
         optionIndex++;
     });
 </script>
+
+<style>
+    /* CSS để tách biệt các phần tử trong form */
+    .question {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+
+    .question h3 {
+        margin-top: 0;
+    }
+
+    .error-messages {
+        background-color: #ffdddd;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    .error-messages ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .error-messages li {
+        color: #d8000c;
+    }
+
+    .options {
+        margin-top: 10px;
+    }
+
+    .option {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .option input[type="text"], .option textarea {
+        margin-right: 10px;
+    }
+
+    .option label {
+        margin-right: 10px;
+    }
+
+    .add-option {
+        margin-top: 10px;
+    }
+
+    #add-question {
+        margin-top: 20px;
+    }
+</style>

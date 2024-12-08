@@ -218,7 +218,8 @@ namespace Mcq.Controllers
                     Options = q.QuestionOptions.Select(o => new OptionViewModel
                     {
                         Content = o.option_content
-                    }).ToList()
+                    }).ToList(),
+                    Flagged = false
                 }).ToList()
             };
                 return View(model);
@@ -255,6 +256,7 @@ namespace Mcq.Controllers
             var examResult = (from attempt in _context.ExamAttempts
                             join exam in _context.Exams on attempt.Idexam equals exam.Idexam
                             where attempt.Idstudent == studentId && attempt.Idexam == examId
+                            orderby attempt.StartTime descending
                             select new
                             {
                                 ExamName = exam.Name,
@@ -298,6 +300,7 @@ namespace Mcq.Controllers
             var performanceData = (from attempt in _context.ExamAttempts
                                 join exam in _context.Exams on attempt.Idexam equals exam.Idexam
                                 where attempt.Idstudent == studentId
+                                orderby attempt.StartTime descending
                                 select new
                                 {
                                     ExamName = exam.Name,

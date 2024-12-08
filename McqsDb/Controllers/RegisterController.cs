@@ -39,7 +39,6 @@ namespace Mcq.Controllers
         {
             Console.WriteLine("ModelState Error: " + error.ErrorMessage);
         }
-            return View(model);
         }
 
         var existingUser = _context.Users.SingleOrDefault(u => u.Email == model.Email);

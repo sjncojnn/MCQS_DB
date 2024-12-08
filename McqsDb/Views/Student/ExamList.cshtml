@@ -1,39 +1,38 @@
 @model IEnumerable<dynamic>
 
-<h2>Exam List</h2>
+<h2 class="text-center">Exam List</h2>
 
-<div id="examList">
+<div id="examList" class="container">
     @foreach (var grade in Model)
     {
         <div class="grade">
-            <button class="toggle" onclick="toggleDropdown('grade-@grade.Grade')">
+            <button class="toggle btn btn-secondary" onclick="toggleDropdown('grade-@grade.Grade')">
                 ▶ Grade: @grade.Grade
             </button>
             <div id="grade-@grade.Grade" class="hidden">
                 @foreach (var subject in grade.Subjects)
                 {
                     <div class="subject">
-                        <button class="toggle" onclick="toggleDropdown('subject-@subject.Subject')">
+                        <button class="toggle btn btn-secondary" onclick="toggleDropdown('subject-@subject.Subject')">
                             ▶ Subject: @subject.Subject
                         </button>
                         <div id="subject-@subject.Subject" class="hidden">
                             @foreach (var topic in subject.Topics)
                             {
                                 <div class="topic">
-                                    <button class="toggle" onclick="toggleDropdown('topic-@topic.Topic')">
+                                    <button class="toggle btn btn-secondary" onclick="toggleDropdown('topic-@topic.Topic')">
                                         ▶ Topic: @topic.Topic
                                     </button>
                                     <div id="topic-@topic.Topic" class="hidden">
                                         <ul>
                                             @foreach (var exam in topic.Exams)
                                             {
-                                                <li>
+                                                <li class="exam-item">
                                                     <strong>Exam Name:</strong> @exam.ExamName <br />
                                                     <strong>Duration:</strong> @exam.Duration minutes<br />
                                                     <strong>Questions:</strong> @exam.NumberOfQuestions<br />
                                                     <strong>Created by:</strong> @exam.CreatedBy <br/>
                                                     <a asp-controller="Student" asp-action="Detail" asp-route-examId="@exam.ExamId" class="btn btn-primary">Details</a>
-
                                                 </li>
                                             }
                                         </ul>
@@ -51,11 +50,7 @@
 <script>
     function toggleDropdown(id) {
         const element = document.getElementById(id);
-        if (element.classList.contains('hidden')) {
-            element.classList.remove('hidden');
-        } else {
-            element.classList.add('hidden');
-        }
+        element.classList.toggle('hidden');
     }
 </script>
 
@@ -66,5 +61,37 @@
 
     .grade, .subject, .topic {
         margin-left: 20px;
+        margin-bottom: 10px;
+    }
+
+    .toggle {
+        width: 100%;
+        text-align: left;
+        padding: 5px;
+        background-color: #007bff; /* Màu xanh lam */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .toggle:hover {
+        background-color: #0056b3; /* Đậm hơn màu xanh khi hover */
+    }
+
+    .exam-item {
+        background-color: #f9f9f9; /* Màu nền sáng */
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Hiệu ứng shadow nhẹ */
+        overflow-y: auto; /* Cho phép cuộn dọc */
+        max-height: 300px; /* Đặt chiều cao tối đa của vùng scroll */
+        padding-right: 10px; /* Điều chỉnh khoảng trống cuộn */
+    }
+
+    .btn {
+        margin-top: 10px;
     }
 </style>

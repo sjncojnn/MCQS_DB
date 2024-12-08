@@ -23,7 +23,7 @@ namespace Mcq.Middleware
             var path = context.Request.Path.ToString().ToLower();
             Console.WriteLine(path);
             Console.WriteLine(context.Session.GetString("UserId"));
-            if ((!path.StartsWith("/account")) && string.IsNullOrEmpty(context.Session.GetString("UserId")))
+            if ((!(path.StartsWith("/account")||path.StartsWith("/register"))) && string.IsNullOrEmpty(context.Session.GetString("UserId")))
             {
                 Console.WriteLine(context.Session.GetString("RoleID"));
                 Console.WriteLine(path);
